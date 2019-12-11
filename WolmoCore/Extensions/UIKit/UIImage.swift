@@ -41,6 +41,23 @@ public extension UIImage {
         
         return newImage
     }
+    
+    public func resized2(toSize: CGSize, maintainAspectRatio: Bool, useScreenScale: Bool = true, cornerRadius: CGFloat = 0.0, insets: UIEdgeInsets = .zero) -> UIImage {
+        let newSize = maintainAspectRatio ? size.resizedMaintainingRatio(wantedSize: toSize) : toSize
+        let scale: CGFloat = useScreenScale ? 0.0 : 1.0
+        let imageRect = CGRect(origin: CGPoint.zero, size: newSize)
+        
+        UIGraphicsBeginImageContextWithOptions(newSize, false, scale)
+        if cornerRadius > 0 {
+            let path = UIBezierPath(roundedRect: imageRect, cornerRadius: cornerRadius)
+            path.addClip()
+        }
+        resizableImage(withCapInsets: capInsets).draw(in: imageRect)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()!
+        UIGraphicsEndImageContext()
+        
+        return newImage
+    }
 
     /**
      Returns the aspect ratio of the image represented by a CGFloat. 
