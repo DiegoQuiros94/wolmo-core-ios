@@ -28,5 +28,13 @@ public extension Dictionary where Value == Any {
         }
         return castedValue
     }
+    
+    public func castedValue2<T>(forKey key: Key, or defaultValue: @autoclosure () -> T) -> T {
+        guard let value = self[key] else { return defaultValue() }
+        guard let castedValue = value as? T else {
+            fatalError("The dictionary's value to key \(key) is not of type \(T.self)")
+        }
+        return castedValue
+    }
 
 }
